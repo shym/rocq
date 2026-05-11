@@ -30,7 +30,6 @@ let with_options ol f x =
   let vl = List.map (!) ol in
   let () = List.iter (fun r -> r := true) ol in
   try
-    Sys.with_async_exns @@ fun () -> (* FIXME drop? *)
     let r = f x in
     let () = List.iter2 (:=) ol vl in r
   with reraise ->

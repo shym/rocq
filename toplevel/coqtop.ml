@@ -73,9 +73,7 @@ let start_coq custom args =
   let init_feeder = Feedback.add_feeder Coqloop.coqloop_feed in
   (* Init phase *)
   let opts, custom_opts, state =
-    try
-      Sys.with_async_exns @@ fun () ->
-      init_toplevel custom args
+    try init_toplevel custom args
     with any ->
       flush_all();
       fatal_error_exn any in
@@ -170,7 +168,6 @@ let fix_windows_dirsep s =
 let get_native_name s =
   (* We ignore even critical errors because this mode has to be super silent *)
   try
-    Sys.with_async_exns @@ fun () ->
     fix_windows_dirsep @@
     Filename.(List.fold_left concat (dirname s)
                 [ !Nativelib.output_dir

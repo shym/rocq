@@ -86,7 +86,6 @@ let windows_timeout n f x =
   | Sys.Break ->
     let _, info as e = Exninfo.capture Sys.Break in
     (* Just in case, it could be a regular Ctrl+C *)
-    (* FIXME: exited is no longer required with asynchronous Sys.Break *)
     if not !exited then begin killed := true; Exninfo.iraise e end
     else Error info
   | e ->
@@ -111,7 +110,6 @@ let protect_sigalrm f x =
   try
     let old_handler = Sys.signal Sys.sigalrm (Sys.Signal_handle timeout_handler) in
     try
-      Sys.with_async_exns @@ fun () ->
       let res = f x in
       Sys.set_signal Sys.sigalrm old_handler;
       match !timed_out, old_handler with

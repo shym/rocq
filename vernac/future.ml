@@ -128,7 +128,6 @@ let rec compute ck : 'a value =
     CThread.with_lock lock ~scope:(fun () -> Condition.wait cond lock); compute ck
   | Closure f ->
       try
-        Sys.with_async_exns @@ fun () -> (* FIXME drop? *)
         let data = f () in
         c := Val data; `Val data
       with e ->

@@ -92,7 +92,7 @@ struct
         let (src, info) = Exninfo.capture src in
         h (e, info) ()
 
-  let read_line = fun () -> try Sys.with_async_exns read_line with e ->
+  let read_line = fun () -> try read_line () with e ->
     let (e, info) = Exninfo.capture e in
     raise (e,info) ()
 

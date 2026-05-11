@@ -373,7 +373,6 @@ let in_phase ~phase f x =
   let op = !default_phase in
   default_phase := phase;
   try
-    Sys.with_async_exns @@ fun () -> (* FIXME drop? *)
     let res = f x in
     default_phase := op;
     res

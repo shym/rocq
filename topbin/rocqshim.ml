@@ -68,7 +68,6 @@ let parse_args args =
 let with_ic file f =
   let ic = open_in file in
   try
-    (* FIXME for asynchronous exceptions? *)
     let rc = f ic in
     close_in ic;
     rc

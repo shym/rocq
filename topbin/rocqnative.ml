@@ -375,7 +375,6 @@ let rec parse_args (args : string list) accu =
 let () =
   let _ = Feedback.add_feeder fb_handler in
   try
-    (* FIXME for asynchronous exceptions? *)
     let opts = { boot = false; coqlib = None; vo_path = []; ml_path = [] } in
     let opts, in_file = parse_args (List.tl @@ Array.to_list Sys.argv) opts in
     let () = init_load_path ~boot:opts.boot

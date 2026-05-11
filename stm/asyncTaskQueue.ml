@@ -178,7 +178,7 @@ module Make(T : Task) () = struct
         kill_if ()
     in
     let kill_if () =
-      try Sys.with_async_exns kill_if
+      try kill_if ()
       with Sys.Break ->
         let () = stop_waiting := true in
         let () = TQueue.broadcast queue in
@@ -329,7 +329,6 @@ module Make(T : Task) () = struct
 
   let with_n_workers ~spawn_args n priority f =
     let q = create ~spawn_args n priority in
-    (* FIXME Fun.protect_async, probably *)
     try let rc = f q in destroy q; rc
     with e -> let e = Exninfo.capture e in destroy q; Exninfo.iraise e
 

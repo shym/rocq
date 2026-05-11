@@ -68,9 +68,7 @@ let with_measure measure add fmt flag init f =
 let measure_profile f () =
   let start_cnt = NewProfile.Counters.get() in
   let events, sums, v = NewProfile.with_profiling (fun () ->
-      try
-        Sys.with_async_exns @@ fun () ->
-        Ok (f ())
+      try Ok (f ())
       with e -> Error (Exninfo.capture e))
   in
   let counters = NewProfile.Counters.(get() - start_cnt) in

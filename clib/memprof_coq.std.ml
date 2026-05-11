@@ -44,14 +44,11 @@ end
 
 module Masking = struct
 
-  (* FIXME with synchronous exceptions *)
   (* There's no mechanism to block OCaml's async exceptions,
      so without memprof there is nothing interesting to do. *)
   let with_resource ~acquire arg ~scope ~(release : _ -> unit) =
     let r = acquire arg in
-    Fun.protect ~finally:(fun () -> release r)
-      (* (fun () -> scope r) *)
-      (fun () -> Sys.with_async_exns (fun () -> scope r))
+    Fun.protect ~finally:(fun () -> release r) (fun () -> scope r)
 
 end
 

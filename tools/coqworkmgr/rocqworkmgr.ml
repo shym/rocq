@@ -206,7 +206,6 @@ let main ~prog argv =
   end;
   Sys.catch_break true;
   try
-    Sys.with_async_exns @@ fun () ->
     while true do
       if !debug then
         Printf.eprintf "Status: #parties=%d tokens=%d/%d \n%!"

@@ -429,7 +429,6 @@ let dump_universes_gen prl g s =
   in
   let output_constraint k l r = output_constraint k (prl l) (prl r) in
   try
-    (* FIXME for asynchronous exceptions? *)
     dump_universes output_constraint g;
     close ();
     str "Universes written to file \"" ++ str s ++ str "\"."

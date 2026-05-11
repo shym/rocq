@@ -488,7 +488,6 @@ type 'doc todo_proofs =
    cleanup in the case the computation raises? *)
 let save_library_base f sum lib proofs vmlib =
   try
-    (* FIXME for asynchronous exceptions? *)
     let open Memprof_coq.Resource_bind in
     let& ch = Memprof_coq.Masking.with_resource ~acquire:raw_extern_library ~release:ObjFile.close_out f in
     ObjFile.marshal_out_segment ch ~segment:summary_seg sum;

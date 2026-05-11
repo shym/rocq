@@ -1557,7 +1557,6 @@ module Parsable = struct
       let info = Loc.add_loc info loc in
       Exninfo.iraise (exn, info)
     | exception exc ->
-      (* FIXME for asynchronous exceptions? *)
       (* An error produced by the evaluation of the right-hand side *)
       (* of a rule, or a signal such as Sys.Break; we leave to the *)
       (* error the responsibility of locating itself *)
@@ -1567,8 +1566,6 @@ module Parsable = struct
   let parse_parsable gstate e p =
     L.State.set !(p.lexer_state);
     try
-      (* FIXME catch async exns here? *)
-      Sys.with_async_exns @@ fun () ->
       let c = parse_parsable gstate e p in
       p.lexer_state := L.State.get ();
       c

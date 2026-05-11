@@ -80,7 +80,6 @@ let thread_friendly_input_value ic =
       really_read_fd fd msg Marshal.header_size body_size;
       Marshal.from_bytes msg 0
     end else begin
-      (* FIXME for asynchronous exceptions? *)
       (* Workaround for 32 bit systems and data > 16M *)
       let name, oc =
         Filename.open_temp_file ~mode:[Open_binary] "coq" "marshal" in

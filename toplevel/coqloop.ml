@@ -75,7 +75,6 @@ let prompt_char doc ic ibuf () =
   in
   if bol && not !print_emacs then top_stderr (str (ibuf.prompt doc));
   try
-    Sys.with_async_exns @@ fun () ->
     let c = input_char ic in
     if c == '\n' then ibuf.bols <- (ibuf.len+1) :: ibuf.bols;
     if ibuf.len == Bytes.length ibuf.str then resize_buffer ibuf;
@@ -286,11 +285,7 @@ let rec discard_to_dot () =
 let read_sentence ~state input =
   (* XXX: careful with ignoring the state Eugene!*)
   let open Vernac.State in
-  try
-    (* FIXME: Should Sys.Break be handled in a slighly subtler way with async
-       there? *)
-    Sys.with_async_exns @@ fun () ->
-    Stm.parse_sentence ~doc:state.doc state.sid ~entry:G_toplevel.vernac_toplevel input
+  try Stm.parse_sentence ~doc:state.doc state.sid ~entry:G_toplevel.vernac_toplevel input
   with reraise ->
     let reraise = Exninfo.capture reraise in
     (* When typing Ctrl-C, two situations may arise:
@@ -405,7 +400,6 @@ let print_and_diff oldp proof =
 
    This is mostly a hack as we should protect printing in a more
    generic way, but that'll do for now *)
-(* FIXME Should we check here for asynchronous exceptions? *)
 let top_goal_print ~doc c oldp newp =
   try
     let proof_changed = not (Option.equal cproof oldp (Some newp)) in
