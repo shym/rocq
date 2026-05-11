@@ -147,6 +147,7 @@ let interp_qed_delayed_control ~proof ~st ~control { CAst.loc; v=pe } =
 (* Be careful with the cache here in case of an exception. *)
 let interp_gen ~verbosely ~st ~interp_fn cmd =
   try
+    Sys.with_async_exns @@ fun () -> (* FIXME drop? *)
     let v_mod = if verbosely then Flags.verbosely else Flags.silently in
     let ontop = v_mod (interp_fn ~st) cmd in
     Vernacstate.Declare.set ontop [@ocaml.warning "-3"];

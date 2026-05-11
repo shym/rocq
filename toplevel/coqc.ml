@@ -51,6 +51,7 @@ let coqc_main ((copts,_),stm_opts) injections ~opts =
 let coqc_run copts ~opts injections =
   let _feeder = Feedback.add_feeder Coqloop.coqloop_feed in
   try
+    Sys.with_async_exns @@ fun () ->
     coqc_main ~opts copts injections;
     exit 0
   with exn ->

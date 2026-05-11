@@ -13,6 +13,8 @@ let parse_env_line l =
   with Scanf.Scan_failure _ | End_of_file -> None
 
 let with_ic file f =
+  (* FIXME What about asynchronous exceptions there?
+     Catch, close and raise again as asynchronous? *)
   let ic = open_in file in
   try
     let rc = f ic in

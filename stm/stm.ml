@@ -958,6 +958,7 @@ end = struct (* {{{ *)
     if is_cached id && not redefine then
       anomaly Pp.(str"defining state "++str str_id++str" twice.");
     try
+      Sys.with_async_exns @@ fun () -> (* FIXME drop? *)
       stm_prerr_endline (fun () -> "defining "^str_id^" (cache="^
         if cache then "Y)" else "N)");
       f ();
@@ -997,6 +998,7 @@ end = struct (* {{{ *)
   let purify f x =
     let st = freeze () in
     try
+      Sys.with_async_exns @@ fun () ->
       let res = f x in
       Vernacstate.Interp.invalidate_cache ();
       unfreeze st;
@@ -1464,6 +1466,7 @@ end = struct (* {{{ *)
         let wall_clock = Unix.gettimeofday () in
         let proof =
           try
+            (* FIXME for asynchronous exceptions? *)
             build_proof_here_fun ~doc:dummy_doc (* XXX should be document *)
               ?loc ~drop_pt:drop ~id:exn_info.Stateid.id stop
           with exn ->
@@ -1489,6 +1492,7 @@ end = struct (* {{{ *)
           let st = Vernacstate.freeze_full_state () in
           let opaque = Opaque in
           try
+            (* FIXME for asynchronous exceptions? *)
             let _pstate =
               stm_qed_delay_proof ~st ~id:stop
                 ~proof:pobject ~loc ~control:[] (Proved (opaque,None)) in
@@ -2149,6 +2153,7 @@ let known_state ~doc ?(redefine_qed=false) ~cache id =
                     let control = VernacControl.from_syntax control in
                     let control, proof =
                       try
+                        (* FIXME for asynchronous exceptions? *)
                         VernacControl.under_control ~loc:x.expr.loc
                           ~with_local_state:VernacControl.trivial_state
                           control
@@ -2293,6 +2298,7 @@ let observe ~doc id =
   !Hooks.sentence_exec id;
   let vcs = VCS.backup () in
   try
+    Sys.with_async_exns @@ fun () -> (* FIXME drop? *)
     Reach.known_state ~doc ~cache:(VCS.is_interactive ()) id;
     VCS.print ()
   with e ->
@@ -2442,6 +2448,7 @@ let process_transaction ~doc ?(newtip=Stateid.fresh ()) x c =
   stm_pperr_endline (fun () -> str "{{{ processing: " ++ pr_ast x);
   let vcs = VCS.backup () in
   try
+    Sys.with_async_exns @@ fun () ->
     let head = VCS.current_branch () in
     VCS.checkout head;
     let head_parsing =

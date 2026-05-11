@@ -53,6 +53,7 @@ let fetch_delayed del =
   let ch = open_in_bin f in
   let obj, digest' =
     try
+      (* FIXME for asynchronous exceptions? *)
       let () = LargeFile.seek_in ch pos in
       let obj = System.marshal_in f ch in
       let digest' = Digest.input ch in

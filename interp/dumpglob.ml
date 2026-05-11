@@ -79,6 +79,7 @@ let continue = pop_output
 let with_glob_output g f () =
   push_output g;
   try
+    (* FIXME for asynchronous exceptions? *)
     let res = f () in
     pop_output ();
     res
